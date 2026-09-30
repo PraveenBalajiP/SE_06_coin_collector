@@ -125,3 +125,212 @@ Submission is only the following three things:
 - [ ] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
 - [ ] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
 - [ ] The Chat/LLM used page link, with the complete chat history
+
+---
+
+## Implemented Changes
+
+The following changes were implemented as part of completing Tasks 1–4.
+
+### Task 1 — One-time coin collection
+
+The original collection logic checked for overlapping coins every
+frame. The collected coin was then awarded repeatedly because it
+remained in the active coin list.
+
+The implementation now removes a coin from the active coin list
+immediately after awarding its value.
+
+Therefore:
+
+- A coin is awarded only once.
+- Standing on a collected coin does not continuously increase the
+  score.
+- Walking through a coin also awards its value only once.
+- Collected coins disappear from the play area.
+
+### Task 2 — Multiple coin types
+
+Three visually distinct coin types were added:
+
+| Coin Type | Value |
+|---|---:|
+| Bronze | 1 point |
+| Silver | 3 points |
+| Gold | 5 points |
+
+Each coin stores its own value and color. New coins are randomly
+assigned one of the available coin types.
+
+The score therefore increases according to the type of coin collected.
+
+Example:
+
+```text
+Bronze → +1
+Silver → +3
+Gold   → +5
+```
+
+### Task 3 — Obstacles and lives
+
+Obstacles were added to the play area as rectangular objects.
+
+The player starts each round with **3 lives**.
+
+When the player collides with an obstacle:
+
+- One life is lost.
+- The player is returned to the starting position.
+- The collision does not continuously remove lives while the player
+  remains on the obstacle.
+- The game ends when the number of lives reaches zero.
+
+The obstacles remain within the defined game play area.
+
+### Task 4 — Timed round
+
+A **30-second countdown** was added to each round.
+
+The game displays:
+
+```text
+Score: <current score>
+Lives: <remaining lives>
+Time: <remaining seconds>
+```
+
+The round ends when either:
+
+1. The timer reaches zero, or
+2. The player's lives reach zero.
+
+When the round ends:
+
+- Player movement stops.
+- Coin collection stops.
+- Obstacle effects stop.
+- The final score remains visible.
+- A round-over message is displayed.
+
+The player can press **R** to start a new round.
+
+Restarting a round resets:
+
+```text
+Score  → 0
+Lives  → 3
+Timer  → 30 seconds
+Coins  → New set of coins
+Player → Starting position
+```
+
+---
+
+## Controls
+
+During an active round:
+
+```text
+↑  Move up
+↓  Move down
+←  Move left
+→  Move right
+```
+
+After the round ends:
+
+```text
+R  Restart the round
+```
+
+---
+
+## Final Game Flow
+
+The completed game follows this general flow:
+
+```text
+Start Game
+    │
+    ▼
+30-Second Round
+    │
+    ├── Collect Bronze → +1
+    ├── Collect Silver → +3
+    ├── Collect Gold   → +5
+    │
+    ├── Hit Obstacle → -1 Life
+    │
+    ├── Time = 0 ──────────────┐
+    │                          │
+    └── Lives = 0 ─────────────┤
+                               ▼
+                          ROUND OVER
+                               │
+                               ▼
+                         Final Score
+                               │
+                               ▼
+                         Press R
+                               │
+                               ▼
+                         New Round
+```
+
+---
+
+## Testing Checklist
+
+The completed implementation can be verified using the following
+tests:
+
+- [ ] Walking through a coin awards its value exactly once.
+- [ ] Standing on a collected coin does not repeatedly increase the
+      score.
+- [ ] Bronze coins award 1 point.
+- [ ] Silver coins award 3 points.
+- [ ] Gold coins award 5 points.
+- [ ] The three coin types are visually distinguishable.
+- [ ] Obstacles are visible inside the play area.
+- [ ] Hitting an obstacle removes one life.
+- [ ] Remaining on an obstacle does not repeatedly remove lives.
+- [ ] The player is repositioned after an obstacle collision.
+- [ ] The round starts with 3 lives.
+- [ ] The timer starts at 30 seconds.
+- [ ] The remaining time is displayed.
+- [ ] The round ends when the timer reaches zero.
+- [ ] The round ends when lives reach zero.
+- [ ] The final score is clearly displayed.
+- [ ] Pressing `R` starts a new round.
+- [ ] Score, lives, timer, player position, and coins are reset after
+      restarting.
+
+---
+
+## Gameplay Demonstration
+
+The required gameplay videos should demonstrate the difference between
+the original and completed versions.
+
+### Before Changes
+
+The 10-second gameplay video should demonstrate the original coin
+collection bug, where a coin can increase the score repeatedly while
+the player remains in contact with it.
+
+### After Changes
+
+The 10-second gameplay video should demonstrate the completed
+functionality, including as many of the following as practical:
+
+- One-time coin collection
+- Different coin types and values
+- Obstacle collision
+- Lives decreasing after an obstacle collision
+- Countdown timer
+- Score and lives display
+- Round-over behavior
+
+The complete LLM/ChatGPT conversation should also be provided through
+the required chat/page link as specified in the submission checklist.
