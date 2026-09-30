@@ -23,12 +23,20 @@ COIN_TYPES = [
     {"value": 5, "color": (255, 215, 0)},    # Gold
 ]
 
+OBSTACLES = [
+    pygame.Rect(100, 100, 120, 30),
+    pygame.Rect(300, 220, 30, 120),
+    pygame.Rect(500, 100, 120, 30),
+]
+
 
 class GameEngine:
     def __init__(self):
         self.player = Player(x=WIDTH / 2, y=HEIGHT / 2)
         self.coins = [self._random_coin() for _ in range(NUM_COINS)]
+        self.obstacles = OBSTACLES.copy()
         self.score = 0
+        self.lives = 3
 
     def _random_coin(self):
         x = random.randint(30, WIDTH - 30)
@@ -61,8 +69,16 @@ class GameEngine:
         for coin in collected:
             self.score += coin.value
             self.coins.remove(coin)
+        player_rect = self.player.get_rect()
+        for obstacle in self.obstacles:
+            if player_rect.colliderect(obstacle):
+                self.lives -= 1
+                self.player.x = WIDTH / 2
+                self.player.y = HEIGHT / 2
+                break
 
     def draw(self, surface, font):
         from game import renderer
-        renderer.draw_scene(surface, self.player, self.coins)
+        renderer.draw_scene(surface,self.player,self.coins,self.obstacles)
         renderer.draw_text(surface, font, f"Score: {self.score}", (10, 10))
+        renderer.draw_text(surface, font, f"Lives: {self.lives}", (10, 40))
